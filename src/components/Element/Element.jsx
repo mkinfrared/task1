@@ -16,8 +16,9 @@ const elementSource = {
 
 function collect(connect, monitor) {
 	return {
-		connectDragSource: connect.dragSource(),
-		isDragging       : monitor.isDragging()
+		connectDragSource : connect.dragSource(),
+		connectDragPreview: connect.dragPreview(),
+		isDragging        : monitor.isDragging()
 	};
 }
 
@@ -39,9 +40,11 @@ class Element extends Component {
 
 	render() {
 		const {connectDragSource, isDragging} = this.props;
+		const opacity                         = isDragging ? 0 : 1;
 
 		return connectDragSource(
-			<div className='element'>
+			<div className='element'
+				 style={{opacity}}>
 				<i className="fas fa-server"
 				   onClick={() => this.toggleOpen()}>
 				</i>
