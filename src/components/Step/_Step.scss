@@ -1,0 +1,24 @@
+.step {
+	hr {
+		border: 1px solid #FFFFFF;
+	}
+	section {
+		button {
+			width: 100px;
+			border: 2px solid #FFFFFF;
+			border-radius: 30px;
+			padding: 10px;
+			text-align: center;
+			font-weight: 500;
+			font-size: 14px;
+			outline: none;
+			background-color: #FFFFFF;
+		}
+		.add-button {
+			margin-left: 40px;
+			width: 40px;
+			height: 40px;
+			background-color: transparent;
+		}
+	}
+}

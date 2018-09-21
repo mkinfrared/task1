@@ -1,0 +1,218 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700&subset=cyrillic");
+body {
+  margin: 0;
+  padding: 80px 0;
+  font-family: sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.App {
+  width: 70%;
+  outline: 1px solid red;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Roboto";
+}
+
+.start-end {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-height: 20vh;
+}
+.start-end .circle {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border: 5px solid #0069C0;
+  border-radius: 50%;
+}
+.start-end .circle:after {
+  position: absolute;
+  content: "";
+  width: 35px;
+  height: 35px;
+  background-color: #2196F3;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.start-end p {
+  margin-left: 10px;
+  font-size: 18px;
+}
+
+.toggle-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #0069C0;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+.toggle-button i {
+  margin: 0;
+  color: #0069C0;
+}
+
+.stage > button {
+  width: 100px;
+  border: 2px solid #FFFFFF;
+  border-radius: 30px;
+  padding: 10px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+  outline: none;
+}
+.stage > button:nth-child(2) {
+  margin-right: 20px;
+}
+.stage > button:nth-child(3) {
+  position: relative;
+}
+.stage > button:nth-child(3):after {
+  content: "Время";
+  position: absolute;
+  top: -60%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.constructor {
+  background-color: #E0E0DF;
+  width: 100%;
+  padding: 30px 50px;
+}
+.constructor .add-button {
+  width: 53px;
+  height: 53px;
+  border: 2px solid #0069C0;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+.constructor .add-button:after {
+  position: absolute;
+  content: "+";
+  font-size: 24px;
+  color: #0069C0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.2s linear;
+}
+.constructor .add-button:hover {
+  border-color: #2196F3;
+}
+.constructor .add-button:hover:after {
+  color: #2196F3;
+}
+
+.step hr {
+  border: 1px solid #FFFFFF;
+}
+.step section button {
+  width: 100px;
+  border: 2px solid #FFFFFF;
+  border-radius: 30px;
+  padding: 10px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+  outline: none;
+  background-color: #FFFFFF;
+}
+.step section .add-button {
+  margin-left: 40px;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+}
+
+.element {
+  display: inline-block;
+}
+.element i {
+  background-color: #0069C0;
+  padding: 10px;
+  border-radius: 50%;
+  color: #FFFFFF;
+}
+
+.edit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.edit div {
+  width: 700px;
+  height: 600px;
+  background-color: #C1C1C1;
+  padding: 40px;
+}
+.edit div input {
+  padding: 5px;
+  font-weight: 500;
+}
+.edit div div {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  padding: 0;
+  background-color: #FFFFFF;
+  border: 1px solid #000000;
+}
+.edit div div .time-input {
+  width: 25px;
+  border: none;
+  text-align: center;
+  outline: none;
+}
+.edit div div .time-input:first-child {
+  width: 40px;
+  text-align: right;
+}
+.edit div section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 270px;
+}
+.edit div section button {
+  color: #FFFFFF;
+}
+.edit div section button:first-child {
+  margin-right: 35px;
+}
+.edit div section .accept {
+  background-color: #28A745;
+  border-color: #124D1F;
+}
+.edit div section .decline {
+  background-color: #DC3545;
+  border-color: #4D1319;
+}
+
+/*# sourceMappingURL=index.css.map */

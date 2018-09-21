@@ -1,0 +1,30 @@
+.constructor {
+	background-color: #E0E0DF;
+	width: 100%;
+	padding: 30px 50px;
+	.add-button {
+		width: 53px;
+		height: 53px;
+		border: 2px solid #0069C0;
+		border-radius: 50%;
+		position: relative;
+		cursor: pointer;
+		transition: all 0.2s linear;
+		&:after {
+			position: absolute;
+			content: '+';
+			font-size: 24px;
+			color: #0069C0;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			transition: all 0.2s linear;
+		}
+		&:hover {
+			border-color: #2196F3;
+			&:after {
+				color: #2196F3;
+			}
+		}
+	}
+}

@@ -1,0 +1,17 @@
+.toggle-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 30px;
+	padding: 0;
+	width: 20px;
+	height: 20px;
+	border: 2px solid #0069C0;
+	border-radius: 50%;
+	overflow: hidden;
+	cursor: pointer;
+	i {
+		margin: 0;
+		color: #0069C0;
+	}
+}
