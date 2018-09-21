@@ -2,6 +2,24 @@ import React, {Component} from 'react';
 import Edit from '../Edit/Edit';
 import {duration} from "moment";
 import {connect} from 'react-redux';
+import {DragSource} from 'react-dnd';
+import {ItemTypes} from '../constants';
+
+const elementSource = {
+	beginDrag(props) {
+		return {};
+	},
+	endDrag(props, monitor, component) {
+		return {};
+	}
+};
+
+function collect(connect, monitor) {
+	return {
+		connectDragSource: connect.dragSource(),
+		isDragging       : monitor.isDragging()
+	};
+}
 
 class Element extends Component {
 	constructor(props) {
@@ -20,7 +38,9 @@ class Element extends Component {
 	}
 
 	render() {
-		return (
+		const {connectDragSource, isDragging} = this.props;
+
+		return connectDragSource(
 			<div className='element'>
 				<i className="fas fa-server"
 				   onClick={() => this.toggleOpen()}>
@@ -31,8 +51,7 @@ class Element extends Component {
 					  isOpen={this.state.isOpen}
 					  onClose={this.toggleOpen}
 					  changeData={this.changeData}/>
-			</div>
-		);
+			</div>);
 	}
 
 	componentDidMount() {
@@ -57,5 +76,7 @@ class Element extends Component {
 	}
 
 }
+
+Element = DragSource(ItemTypes.ELEMENT, elementSource, collect)(Element);
 
 export default connect((state) => state, null)(Element);
