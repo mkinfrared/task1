@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
 import {duration} from 'moment';
+import {connect} from 'react-redux';
+import {editElem} from '../../ducks/element_reducer';
 
 class Edit extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			id  : '',
 			name: '',
 			resp: '',
 			h   : '',
@@ -14,7 +17,11 @@ class Edit extends Component {
 	}
 
 	render() {
-		const {name, resp, h, m, s} = this.state;
+		const {id, name, resp, h, m, s} = this.state;
+
+		const {path} = this.props;
+
+		const data = {id, name, resp, time: duration(`${h}:${m}:${s}`)};
 
 		if (!this.props.isOpen) {
 			return null;
@@ -56,7 +63,10 @@ class Edit extends Component {
 					</div>
 					<section>
 						<button className='accept'
-								onClick={() => this.props.changeData(name, resp, `${h}:${m}:${s}`)}>
+								onClick={() => {
+									this.props.editElem(path, data);
+									this.props.toggleOpen();
+								}}>
 							Принять
 						</button>
 						<button className='decline'
@@ -70,12 +80,16 @@ class Edit extends Component {
 	}
 
 	componentDidMount() {
+		const {path, store} = this.props;
+		const elem          = store.getIn(path).toJS();
+
 		this.setState({
-			name: this.props.name,
-			resp: this.props.responsible,
-			h   : `${duration(this.props.time).hours()}`,
-			m   : `${duration(this.props.time).minutes()}`.padStart(2, '0'),
-			s   : `${duration(this.props.time).seconds()}`.padStart(2, '0')
+			id  : elem.id,
+			name: elem.name,
+			resp: elem.resp,
+			h   : `${duration(elem.time).hours()}`,
+			m   : `${duration(elem.time).minutes()}`.padStart(2, '0'),
+			s   : `${duration(elem.time).seconds()}`.padStart(2, '0')
 		})
 	}
 
@@ -109,4 +123,4 @@ class Edit extends Component {
 
 }
 
-export default Edit;
+export default connect((state) => ({store: state}), {editElem})(Edit);

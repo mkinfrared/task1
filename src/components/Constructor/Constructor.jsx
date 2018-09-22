@@ -1,37 +1,33 @@
 import React, {Component} from 'react';
 import Stage from '../Stage/Stage';
+import {connect} from 'react-redux';
+import {addStage} from '../../ducks/element_reducer';
 
 class Constructor extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			stages: []
-		};
-	}
-
 	render() {
-		const num = this.state.stages.length;
-		const stages = this.state.stages.map((stage, i) => (
-			<Stage key={i}
-				   num={i}/>
-		));
+		const {store, addStage} = this.props;
+
+		const [...keys] = store.keys();
+
+		const num = keys.length;
+
+		const stages = keys.map((stage, i) => {
+			return <Stage key={i}
+						  num={i}
+						  path={stage}/>
+		});
 
 		return (
 			<div className='constructor'>
 				{stages}
 				<button className='add-button'
-						onClick={() => this.addStage(num)}>
+						onClick={() => addStage(num)}>
 				</button>
 				<p>Добавить этап</p>
 			</div>
 		);
 	}
 
-	addStage(num) {
-		const {stages} = this.state;
-		this.setState({stages: [...stages, `stage${num}`]});
-	}
-
 }
 
-export default Constructor;
+export default connect((state) => ({store: state}), {addStage})(Constructor);

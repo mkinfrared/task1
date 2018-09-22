@@ -2,32 +2,42 @@ import React, {Component} from 'react';
 import ToggleButton from '../ToggleButton/ToggleButton';
 import Step from '../Step/Step';
 import {duration} from 'moment';
+import {connect} from 'react-redux';
+import {addStep} from '../../ducks/element_reducer';
 
 class Stage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			open : false,
-			steps: [],
-			time : []
+			open: false,
 		};
-
-		this.addTime    = this.addTime.bind(this);
-		this.changeTime = this.changeTime.bind(this);
 	}
 
 	render() {
-		const time = this.state.time.reduce((acc, cv) => acc.add(cv.timeToExecute), duration(0));
+		const {store, path, addStep} = this.props;
 
-		const steps = this.state.steps.map((step, i) => (
+		const [...keys] = store.get(path).keys();
+
+		const stepNames = Object.keys(store.get(path).toJS());
+		const time        = stepNames.map((name) => store.getIn([path, name]).toJS())
+								   .map((e) => {
+									   let obj = Object.entries(e);
+									   if (obj[0]) {
+										   return obj.map((e) => {
+											   return e[1].time;
+										   });
+									   }
+								   })
+								   .flat()
+								   .reduce((acc, cv) => acc.add(cv), duration(0));
+
+		const steps = keys.map((step, i) => (
 			<Step key={i}
 				  num={i}
-				  stage={`stage${this.props.num}`}
-				  addTime={this.addTime}
-				  changeTime={this.changeTime}/>
+				  path={[path, step]}/>
 		));
 
-		const num = this.state.steps.length;
+		const num = keys.length;
 
 		return (
 			<div className='stage'>
@@ -43,7 +53,7 @@ class Stage extends Component {
 				<section>
 					{steps}
 					<button className='add-button'
-							onClick={() => this.addStep(num)}>
+							onClick={() => addStep([path], num)}>
 					</button>
 					<p>Добавить шаг</p>
 				</section>
@@ -51,31 +61,6 @@ class Stage extends Component {
 		);
 	}
 
-	addStep(num) {
-		const {steps} = this.state;
-		this.setState({steps: [...steps, `step${num}`]});
-	}
-
-	addTime(obj) {
-		const {time} = this.state;
-
-		this.setState({time: [...time, obj]});
-	}
-
-	changeTime(id, tm) {
-		console.log(id, tm);
-		let {time} = this.state;
-
-		time = time.map((elem) => {
-			if (elem.id === id) {
-				elem.timeToExecute = tm;
-			}
-			return elem;
-		});
-
-		this.setState({time});
-	}
-
 }
 
-export default Stage;
+export default connect((state) => ({store: state}), {addStep})(Stage);
