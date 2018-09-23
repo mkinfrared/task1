@@ -8,7 +8,8 @@ let count = 0;
 const ADD_ELEMENT = 'ADD_ELEMENT',
 	  ADD_STAGE   = 'ADD_STAGE',
 	  ADD_STEP    = 'ADD_STEP',
-	  EDIT_ELEM   = 'EDIT_ELEM';
+	  EDIT_ELEM   = 'EDIT_ELEM',
+	  MOVE_ELEM   = 'MOVE_ELEM';
 
 export default function elementReducer(state = initStore, action) {
 	const {payload} = action;
@@ -26,7 +27,16 @@ export default function elementReducer(state = initStore, action) {
 				time: payload.time
 			}));
 		case EDIT_ELEM:
-			return state.setIn(payload.path, payload.data);
+			return state.setIn(payload.path, Map(payload.data));
+		case MOVE_ELEM:
+			state = state.deleteIn(payload.oldPath);
+			state = state.setIn(payload.newPath, Map({
+				id  : payload.elemData.id,
+				name: payload.elemData.name,
+				resp: payload.elemData.resp,
+				time: payload.elemData.time
+			}));
+			return state;
 		default:
 			return state;
 	}
@@ -48,24 +58,33 @@ export function addStep(path, stepNum) {
 	};
 }
 
-export function addElement(path, elemNum) {
+export function addElement(path) {
+	const obj = {
+		path: [...path, `elem${count}`],
+		id  : count,
+		name: `#${count}`,
+		resp: 'John Doe',
+		time: duration('1:30:00'),
+	};
+
 	count++;
 
 	return {
 		type   : ADD_ELEMENT,
-		payload: {
-			path: [...path, `elem${elemNum}`],
-			id  : count,
-			name: `#${elemNum}`,
-			resp: 'John Doe',
-			time: duration('1:30:00'),
-		}
+		payload: obj
 	};
 }
 
 export function editElem(path, data) {
 	return {
-		type: EDIT_ELEM,
+		type   : EDIT_ELEM,
 		payload: {path, data}
+	};
+}
+
+export function moveElem(oldPath, newPath, elemData) {
+	return {
+		type   : MOVE_ELEM,
+		payload: {oldPath, newPath, elemData}
 	};
 }

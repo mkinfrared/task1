@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Edit from '../Edit/Edit';
 import {connect} from 'react-redux';
+import {moveElem} from '../../ducks/element_reducer';
 import {DragSource} from 'react-dnd';
 import {ItemTypes} from '../constants';
 
@@ -9,7 +10,16 @@ const elementSource = {
 		return {};
 	},
 	endDrag(props, monitor, component) {
-		return {};
+		if (!monitor.didDrop()) {
+			return;
+		}
+		const {path, store} = props;
+		const elemData      = store.getIn(path).toJS();
+
+		let {newPath} = monitor.getDropResult();
+		newPath       = [...newPath, path[path.length - 1]];
+
+		props.moveElem(path, newPath, elemData);
 	}
 };
 
@@ -17,7 +27,9 @@ function collect(connect, monitor) {
 	return {
 		connectDragSource : connect.dragSource(),
 		connectDragPreview: connect.dragPreview(),
-		isDragging        : monitor.isDragging()
+		isDragging        : monitor.isDragging(),
+		newPath           : monitor.getDropResult(),
+		didDrop           : monitor.didDrop()
 	};
 }
 
@@ -33,9 +45,7 @@ class Element extends Component {
 	}
 
 	render() {
-		const {path} = this.props;
-
-		let {connectDragSource, isDragging} = this.props;
+		const {path, connectDragSource, isDragging} = this.props;
 
 		const opacity = isDragging ? 0 : 1;
 
@@ -45,10 +55,7 @@ class Element extends Component {
 				<i className="fas fa-server"
 				   onClick={() => this.toggleOpen()}>
 				</i>
-				<Edit name={this.state.name}
-					  responsible={this.state.responsible}
-					  time={this.state.timeToExecute}
-					  isOpen={this.state.isOpen}
+				<Edit isOpen={this.state.isOpen}
 					  onClose={this.toggleOpen}
 					  toggleOpen={this.toggleOpen}
 					  path={path}/>
@@ -60,13 +67,6 @@ class Element extends Component {
 					<i className="fas fa-server"
 					   onClick={() => this.toggleOpen()}>
 					</i>
-					<Edit name={this.state.name}
-						  responsible={this.state.responsible}
-						  time={this.state.timeToExecute}
-						  isOpen={this.state.isOpen}
-						  onClose={this.toggleOpen}
-						  toggleOpen={this.toggleOpen}
-						  path={path}/>
 				</div>);
 		}
 	}
@@ -79,4 +79,4 @@ class Element extends Component {
 
 Element = DragSource(ItemTypes.ELEMENT, elementSource, collect)(Element);
 
-export default connect((state) => ({store: state}), null)(Element);
+export default connect((state) => ({store: state}), {moveElem})(Element);

@@ -70,7 +70,7 @@ class Edit extends Component {
 							Принять
 						</button>
 						<button className='decline'
-								onClick={() => this.props.onClose()}>
+								onClick={() => this.props.toggleOpen()}>
 							Отмена
 						</button>
 					</section>

@@ -10,26 +10,16 @@ class Stage extends Component {
 		super(props);
 		this.state = {
 			open: false,
+			renderChild: true
 		};
 	}
 
 	render() {
+		const {renderChild} = this.state;
+
 		const {store, path, addStep} = this.props;
 
 		const [...keys] = store.get(path).keys();
-
-		const stepNames = Object.keys(store.get(path).toJS());
-		const time        = stepNames.map((name) => store.getIn([path, name]).toJS())
-								   .map((e) => {
-									   let obj = Object.entries(e);
-									   if (obj[0]) {
-										   return obj.map((e) => {
-											   return e[1].time;
-										   });
-									   }
-								   })
-								   .flat()
-								   .reduce((acc, cv) => acc.add(cv), duration(0));
 
 		const steps = keys.map((step, i) => (
 			<Step key={i}
@@ -46,9 +36,9 @@ class Stage extends Component {
 					Этап №{this.props.num + 1}
 				</button>
 				<button>
-					{time.hours()}:
-					{`${time.minutes()}`.padStart(2, '0')}:
-					{`${time.seconds()}`.padStart(2, '0')}
+					{/*{time.hours()}:*/}
+					{/*{`${time.minutes()}`.padStart(2, '0')}:*/}
+					{/*{`${time.seconds()}`.padStart(2, '0')}*/}
 				</button>
 				<section>
 					{steps}
