@@ -125,6 +125,9 @@ body {
 .step hr {
   border: 1px solid #FFFFFF;
 }
+.step section {
+  display: flex;
+}
 .step section button {
   width: 100px;
   border: 2px solid #FFFFFF;
@@ -213,6 +216,12 @@ body {
 .edit div section .decline {
   background-color: #DC3545;
   border-color: #4D1319;
+}
+
+.step-drop {
+  display: inline-block;
+  width: 108px;
+  min-height: 35px;
 }
 
 /*# sourceMappingURL=index.css.map */

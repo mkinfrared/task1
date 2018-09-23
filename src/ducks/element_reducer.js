@@ -9,7 +9,8 @@ const ADD_ELEMENT = 'ADD_ELEMENT',
 	  ADD_STAGE   = 'ADD_STAGE',
 	  ADD_STEP    = 'ADD_STEP',
 	  EDIT_ELEM   = 'EDIT_ELEM',
-	  MOVE_ELEM   = 'MOVE_ELEM';
+	  MOVE_ELEM   = 'MOVE_ELEM',
+	  MOVE_STEP   = 'MOVE_STEP';
 
 export default function elementReducer(state = initStore, action) {
 	const {payload} = action;
