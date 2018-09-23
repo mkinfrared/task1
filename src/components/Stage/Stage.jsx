@@ -9,14 +9,11 @@ class Stage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			open: false,
-			renderChild: true
+			open: false
 		};
 	}
 
 	render() {
-		const {renderChild} = this.state;
-
 		const {store, path, addStep} = this.props;
 
 		const [...keys] = store.get(path).keys();
@@ -27,7 +24,8 @@ class Stage extends Component {
 				  path={[path, step]}/>
 		));
 
-		const num = keys.length;
+		const time = this.calcTime(keys);
+		const num  = keys.length;
 
 		return (
 			<div className='stage'>
@@ -36,9 +34,9 @@ class Stage extends Component {
 					Этап №{this.props.num + 1}
 				</button>
 				<button>
-					{/*{time.hours()}:*/}
-					{/*{`${time.minutes()}`.padStart(2, '0')}:*/}
-					{/*{`${time.seconds()}`.padStart(2, '0')}*/}
+					{time.hours()}:
+					{`${time.minutes()}`.padStart(2, '0')}:
+					{`${time.seconds()}`.padStart(2, '0')}
 				</button>
 				<section>
 					{steps}
@@ -49,6 +47,25 @@ class Stage extends Component {
 				</section>
 			</div>
 		);
+	}
+
+	calcTime(array) {
+		const {store, path} = this.props;
+		const [...steps]    = store.get(path).keys();
+
+		return array.map((key) => {
+			if (store.hasIn([path, key])) {
+				const [...arr] = store.getIn([path, key]).keys();
+				return arr;
+			}
+		}).flat().map((key) => {
+			return steps.map((name) => {
+				if (store.hasIn([path, name, key])) {
+					const [...value] = store.getIn([path, name, key]).values();
+					return value[3];
+				}
+			});
+		}).flat().reduce((acc, cv) => acc.add(cv), duration(0));
 	}
 
 }
