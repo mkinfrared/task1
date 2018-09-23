@@ -1,9 +1,31 @@
 .element {
 	display: inline-block;
+	position: relative;
 	i {
 		background-color: #0069C0;
 		padding: 10px;
 		border-radius: 50%;
 		color: #FFFFFF;
+	}
+	& + div {
+		margin-left: 40px;
+		position: relative;
+		&:before {
+			content: '';
+			position: absolute;
+			height: 4px;
+			width: 40px;
+			background-color: #0069C0;
+			left: -40px;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+	}
+	p {
+		position: absolute;
+		top: 60%;
+		left: 50%;
+		transform: translateX(-50%);
+		font-size: 14px;
 	}
 }

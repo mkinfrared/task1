@@ -1,4 +1,5 @@
 .step {
+	margin: 20px 0;
 	hr {
 		border: 1px solid #FFFFFF;
 	}
@@ -14,6 +15,9 @@
 			font-size: 14px;
 			outline: none;
 			background-color: #FFFFFF;
+			&:first-child {
+				margin-right: 30px;
+			}
 		}
 		.add-button {
 			margin-left: 40px;

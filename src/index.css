@@ -11,8 +11,7 @@ body {
 }
 
 .App {
-  width: 70%;
-  outline: 1px solid red;
+  width: 50%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -44,6 +43,17 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.start-end .circle:before {
+  content: "";
+  height: calc(20vh - 40px);
+  width: 4px;
+  background-color: #0069C0;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+}
 .start-end p {
   margin-left: 10px;
   font-size: 18px;
@@ -67,6 +77,10 @@ body {
   color: #0069C0;
 }
 
+.stage button {
+  outline: none;
+  cursor: pointer;
+}
 .stage > button {
   width: 100px;
   border: 2px solid #FFFFFF;
@@ -89,6 +103,38 @@ body {
   top: -60%;
   left: 50%;
   transform: translateX(-50%);
+}
+.stage .stage-section {
+  overflow: hidden;
+  padding: 0;
+}
+.stage .stage-section .add-step-section {
+  display: flex;
+}
+.stage .add-step-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+.stage .add-step-section p {
+  font-size: 12px;
+  text-align: center;
+  margin-left: 20px;
+}
+.stage .add-step-section button {
+  background-color: #FFFFFF;
+  position: relative;
+}
+.stage .add-step-section button:before {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 30px;
+  top: -30px;
+  background-color: #0069C0;
+}
+.stage hr {
+  border: 1px solid #FFFFFF;
 }
 
 .constructor {
@@ -122,6 +168,9 @@ body {
   color: #2196F3;
 }
 
+.step {
+  margin: 20px 0;
+}
 .step hr {
   border: 1px solid #FFFFFF;
 }
@@ -139,6 +188,9 @@ body {
   outline: none;
   background-color: #FFFFFF;
 }
+.step section button:first-child {
+  margin-right: 30px;
+}
 .step section .add-button {
   margin-left: 40px;
   width: 40px;
@@ -148,12 +200,34 @@ body {
 
 .element {
   display: inline-block;
+  position: relative;
 }
 .element i {
   background-color: #0069C0;
   padding: 10px;
   border-radius: 50%;
   color: #FFFFFF;
+}
+.element + div {
+  margin-left: 40px;
+  position: relative;
+}
+.element + div:before {
+  content: "";
+  position: absolute;
+  height: 4px;
+  width: 40px;
+  background-color: #0069C0;
+  left: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.element p {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
 }
 
 .edit {
@@ -220,7 +294,7 @@ body {
 
 .step-drop {
   display: inline-block;
-  width: 108px;
+  width: 188px;
   min-height: 35px;
 }
 

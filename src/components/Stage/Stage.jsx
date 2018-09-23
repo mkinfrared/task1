@@ -10,25 +10,24 @@ class Stage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			open: false,
+			open: true,
 			keys: []
 		};
 
-		this.moveStep = this.moveStep.bind(this);
+		this.moveStep    = this.moveStep.bind(this);
+		this.toggleStage = this.toggleStage.bind(this);
 
 	}
 
 	render() {
 		const {store, path, addStep} = this.props;
 
-		const {keys} = this.state;
-		console.log(keys);
+		const {keys, open} = this.state;
 
 		const steps = keys.map((step, i) => {
 			const regEx = /[0-9]/;
 			const index = step.search(regEx);
 			const num   = parseInt(step.substring(index));
-			console.log(num);
 			return <Step key={i}
 						 id={step}
 						 num={num}
@@ -36,12 +35,14 @@ class Stage extends Component {
 						 moveStep={this.moveStep}/>
 		});
 
-		const time = this.calcTime(keys);
-		const num  = keys.length;
+		const time  = this.calcTime(keys);
+		const num   = keys.length;
+		const style = {maxHeight: open ? '1000px' : '0'};
 
 		return (
 			<div className='stage'>
-				<ToggleButton open={this.state.open}/>
+				<ToggleButton open={this.state.open}
+							  toggleOpen={this.toggleStage}/>
 				<button>
 					Этап №{this.props.num + 1}
 				</button>
@@ -50,12 +51,16 @@ class Stage extends Component {
 					{`${time.minutes()}`.padStart(2, '0')}:
 					{`${time.seconds()}`.padStart(2, '0')}
 				</button>
-				<section className='stage-section'>
+				<hr/>
+				<section className='stage-section'
+						 style={style}>
 					{steps}
-					<button className='add-button'
-							onClick={() => addStep([path], num)}>
-					</button>
-					<p>Добавить шаг</p>
+					<div className='add-step-section'>
+						<button className='add-button'
+								onClick={() => addStep([path], num)}>
+						</button>
+						<p>Добавить<br/>шаг</p>
+					</div>
 				</section>
 			</div>
 		);
@@ -91,7 +96,7 @@ class Stage extends Component {
 
 	moveStep(oldIndex, newIndex) {
 		let {keys} = this.state;
-		let item = keys[oldIndex];
+		let item   = keys[oldIndex];
 
 		this.setState(update(this.state, {
 			keys: {
@@ -100,6 +105,9 @@ class Stage extends Component {
 		}));
 	}
 
+	toggleStage() {
+		this.setState({open: !this.state.open});
+	}
 }
 
 export default connect((state) => ({store: state}), {addStep})(Stage);

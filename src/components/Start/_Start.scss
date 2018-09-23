@@ -20,6 +20,17 @@
 			left: 50%;
 			transform: translate(-50%, -50%);
 		}
+		&:before {
+			content: '';
+			height: calc(20vh - 40px);
+			width: 4px;
+			background-color: #0069C0;
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: -1;
+		}
 	}
 	p {
 		margin-left: 10px;

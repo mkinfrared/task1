@@ -80,7 +80,6 @@ class Step extends Component {
 
 		return connectDragSource(connectDropTarget(
 			<div className='step'>
-				<hr/>
 				<section>
 					<button>
 						Шаг №{this.props.num + 1}

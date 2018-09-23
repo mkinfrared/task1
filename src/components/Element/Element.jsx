@@ -45,21 +45,26 @@ class Element extends Component {
 	}
 
 	render() {
-		const {path, connectDragSource, isDragging} = this.props;
+		const {path, store, connectDragSource, isDragging} = this.props;
 
 		const opacity = isDragging ? 0 : 1;
 
+		const name = store.getIn(path).toJS().name;
+		console.log(name);
+
 		if (this.state.isOpen) {
-			return <div className='element'
-						style={{opacity}}>
-				<i className="fas fa-server"
-				   onClick={() => this.toggleOpen()}>
-				</i>
-				<Edit isOpen={this.state.isOpen}
-					  onClose={this.toggleOpen}
-					  toggleOpen={this.toggleOpen}
-					  path={path}/>
-			</div>;
+			return (
+				<div className='element'
+					 style={{opacity}}>
+					<i className="fas fa-server"
+					   onClick={() => this.toggleOpen()}>
+					</i>
+					<p>{name}</p>
+					<Edit isOpen={this.state.isOpen}
+						  onClose={this.toggleOpen}
+						  toggleOpen={this.toggleOpen}
+						  path={path}/>
+				</div>);
 		} else {
 			return connectDragSource(
 				<div className='element'
@@ -67,6 +72,7 @@ class Element extends Component {
 					<i className="fas fa-server"
 					   onClick={() => this.toggleOpen()}>
 					</i>
+					<p>{name}</p>
 				</div>);
 		}
 	}
