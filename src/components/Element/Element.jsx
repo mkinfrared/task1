@@ -1,61 +1,82 @@
 import React, {Component} from 'react';
 import Edit from '../Edit/Edit';
-import {duration} from "moment";
 import {connect} from 'react-redux';
+import {moveElem} from '../../ducks/element_reducer';
+import {DragSource} from 'react-dnd';
+import {ItemTypes} from '../constants';
+
+const elementSource = {
+	beginDrag(props) {
+		return {};
+	},
+	endDrag(props, monitor, component) {
+		if (!monitor.didDrop()) {
+			return;
+		}
+		const {path, store} = props;
+		const elemData      = store.getIn(path).toJS();
+
+		let {newPath} = monitor.getDropResult();
+		newPath       = [...newPath, path[path.length - 1]];
+
+		props.moveElem(path, newPath, elemData);
+	}
+};
+
+function collect(connect, monitor) {
+	return {
+		connectDragSource : connect.dragSource(),
+		connectDragPreview: connect.dragPreview(),
+		isDragging        : monitor.isDragging(),
+		newPath           : monitor.getDropResult(),
+		didDrop           : monitor.didDrop()
+	};
+}
 
 class Element extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			id           : this.props.elementID,
-			name         : `#${this.props.elementID}`,
-			responsible  : 'John Doe',
-			timeToExecute: duration('1:30:00'),
-			isOpen       : false
+			isOpen: false
 		};
 
 		this.toggleOpen = this.toggleOpen.bind(this);
-		this.changeData = this.changeData.bind(this);
 
 	}
 
 	render() {
-		return (
-			<div className='element'>
+		const {path, connectDragSource, isDragging} = this.props;
+
+		const opacity = isDragging ? 0 : 1;
+
+		if (this.state.isOpen) {
+			return <div className='element'
+						style={{opacity}}>
 				<i className="fas fa-server"
 				   onClick={() => this.toggleOpen()}>
 				</i>
-				<Edit name={this.state.name}
-					  responsible={this.state.responsible}
-					  time={this.state.timeToExecute}
-					  isOpen={this.state.isOpen}
+				<Edit isOpen={this.state.isOpen}
 					  onClose={this.toggleOpen}
-					  changeData={this.changeData}/>
-			</div>
-		);
-	}
-
-	componentDidMount() {
-		const {id, timeToExecute} = this.state;
-
-		this.props.addTime({id, timeToExecute});
+					  toggleOpen={this.toggleOpen}
+					  path={path}/>
+			</div>;
+		} else {
+			return connectDragSource(
+				<div className='element'
+					 style={{opacity}}>
+					<i className="fas fa-server"
+					   onClick={() => this.toggleOpen()}>
+					</i>
+				</div>);
+		}
 	}
 
 	toggleOpen() {
 		this.setState({isOpen: !this.state.isOpen});
 	}
 
-	changeData(name, resp, time) {
-		this.setState({
-			name         : name,
-			resp         : resp,
-			timeToExecute: duration(time)
-		});
-
-		this.props.changeTime(this.state.id, duration(time));
-		this.toggleOpen();
-	}
-
 }
 
-export default connect((state) => state, null)(Element);
+Element = DragSource(ItemTypes.ELEMENT, elementSource, collect)(Element);
+
+export default connect((state) => ({store: state}), {moveElem})(Element);

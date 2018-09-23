@@ -2,32 +2,42 @@ import React, {Component} from 'react';
 import ToggleButton from '../ToggleButton/ToggleButton';
 import Step from '../Step/Step';
 import {duration} from 'moment';
+import {connect} from 'react-redux';
+import {addStep} from '../../ducks/element_reducer';
+import update from 'immutability-helper';
 
 class Stage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			open : false,
-			steps: [],
-			time : []
+			open: false,
+			keys: []
 		};
 
-		this.addTime    = this.addTime.bind(this);
-		this.changeTime = this.changeTime.bind(this);
+		this.moveStep = this.moveStep.bind(this);
+
 	}
 
 	render() {
-		const time = this.state.time.reduce((acc, cv) => acc.add(cv.timeToExecute), duration(0));
+		const {store, path, addStep} = this.props;
 
-		const steps = this.state.steps.map((step, i) => (
-			<Step key={i}
-				  num={i}
-				  stage={`stage${this.props.num}`}
-				  addTime={this.addTime}
-				  changeTime={this.changeTime}/>
-		));
+		const {keys} = this.state;
+		console.log(keys);
 
-		const num = this.state.steps.length;
+		const steps = keys.map((step, i) => {
+			const regEx = /[0-9]/;
+			const index = step.search(regEx);
+			const num   = parseInt(step.substring(index));
+			console.log(num);
+			return <Step key={i}
+						 id={step}
+						 num={num}
+						 path={[path, step]}
+						 moveStep={this.moveStep}/>
+		});
+
+		const time = this.calcTime(keys);
+		const num  = keys.length;
 
 		return (
 			<div className='stage'>
@@ -40,10 +50,10 @@ class Stage extends Component {
 					{`${time.minutes()}`.padStart(2, '0')}:
 					{`${time.seconds()}`.padStart(2, '0')}
 				</button>
-				<section>
+				<section className='stage-section'>
 					{steps}
 					<button className='add-button'
-							onClick={() => this.addStep(num)}>
+							onClick={() => addStep([path], num)}>
 					</button>
 					<p>Добавить шаг</p>
 				</section>
@@ -51,31 +61,45 @@ class Stage extends Component {
 		);
 	}
 
-	addStep(num) {
-		const {steps} = this.state;
-		this.setState({steps: [...steps, `step${num}`]});
+	componentWillReceiveProps(nextProps) {
+		const {path, store} = nextProps;
+
+		const [...keys] = store.get(path).keys();
+
+		this.setState({keys});
+
 	}
 
-	addTime(obj) {
-		const {time} = this.state;
+	calcTime(array) {
+		const {store, path} = this.props;
+		const [...steps]    = store.get(path).keys();
 
-		this.setState({time: [...time, obj]});
-	}
-
-	changeTime(id, tm) {
-		console.log(id, tm);
-		let {time} = this.state;
-
-		time = time.map((elem) => {
-			if (elem.id === id) {
-				elem.timeToExecute = tm;
+		return array.map((key) => {
+			if (store.hasIn([path, key])) {
+				const [...arr] = store.getIn([path, key]).keys();
+				return arr;
 			}
-			return elem;
-		});
+		}).flat().map((key) => {
+			return steps.map((name) => {
+				if (store.hasIn([path, name, key])) {
+					const [...value] = store.getIn([path, name, key]).values();
+					return value[3];
+				}
+			});
+		}).flat().reduce((acc, cv) => acc.add(cv), duration(0));
+	}
 
-		this.setState({time});
+	moveStep(oldIndex, newIndex) {
+		let {keys} = this.state;
+		let item = keys[oldIndex];
+
+		this.setState(update(this.state, {
+			keys: {
+				$splice: [[oldIndex, 1], [newIndex, 0, item]]
+			}
+		}));
 	}
 
 }
 
-export default Stage;
+export default connect((state) => ({store: state}), {addStep})(Stage);

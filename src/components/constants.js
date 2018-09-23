@@ -1,3 +1,4 @@
 export const ItemTypes = {
-	ELEMENT: 'element'
+	ELEMENT: 'element',
+	STEP   : 'step'
 };
