@@ -1,5 +1,11 @@
 .step-drop {
 	display: inline-block;
 	width: 188px;
-	min-height: 35px;
+	min-height: 80px;
+	div {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
 }

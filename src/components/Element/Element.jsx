@@ -50,7 +50,6 @@ class Element extends Component {
 		const opacity = isDragging ? 0 : 1;
 
 		const name = store.getIn(path).toJS().name;
-		console.log(name);
 
 		if (this.state.isOpen) {
 			return (
