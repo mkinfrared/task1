@@ -28,6 +28,15 @@ class Constructor extends Component {
 		);
 	}
 
+	componentWillReceiveProps(nextProps) {
+		let {store} = nextProps;
+
+		store = JSON.stringify(store.toJS());
+
+		localStorage.setItem('process', store);
+	}
+
+
 }
 
 export default connect((state) => ({store: state}), {addStage})(Constructor);
